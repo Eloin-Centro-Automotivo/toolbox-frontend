@@ -1,0 +1,19 @@
+/* src/Components/Conferencia.module.css */
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  button {
+    padding: 10px 20px;
+  }
+  
