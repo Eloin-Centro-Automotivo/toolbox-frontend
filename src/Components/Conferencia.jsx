@@ -7,7 +7,8 @@ function Conferencia() {
   const [mecanicos, setMecanicos] = useState([]);
   const [ferramentas, setFerramentas] = useState([]);
   const [selectedMecanico, setSelectedMecanico] = useState('');
-  const [ferramentasFaltantes, setFerramentasFaltantes] = useState([]);
+  const [ferramentasPresentes, setFerramentasPresentes] = useState([]);
+  const [categoriasVisiveis, setCategoriasVisiveis] = useState({});
 
   useEffect(() => {
     // Obter a lista de mecânicos
@@ -21,15 +22,43 @@ function Conferencia() {
     });
   }, []);
 
+  // Mostrar categorias
+  const toggleCategoria = (categoria) => {
+    setCategoriasVisiveis(prevState => ({
+      ...prevState,
+      [categoria]: !prevState[categoria],
+    }));
+  };
+
+  // Organizar ferramentas por categoria
+  const ferramentasPorCategoria = ferramentas.reduce((acc, ferramenta) => {
+    const categoria = ferramenta.categoria;
+    if (!acc[categoria]) {
+      acc[categoria] = [];
+    }
+    acc[categoria].push(ferramenta);
+    return acc;
+  }, {});
+
   const handleFerramentaChange = (event) => {
     const { value, checked } = event.target;
     if (checked) {
-      setFerramentasFaltantes([...ferramentasFaltantes, value]);
+      setFerramentasPresentes([...ferramentasPresentes, value]);
     } 
     else {
-      setFerramentasFaltantes(ferramentasFaltantes.filter(f => f !== value));
+      setFerramentasPresentes(ferramentasPresentes.filter(f => f !== value));
     }
   };
+
+  const selecionarTodas = () => {
+    const todasFerramentasIds = ferramentas.map(f => f.id.toString());
+    setFerramentasPresentes(todasFerramentasIds);
+  };
+  
+  const desmarcarTodas = () => {
+    setFerramentasPresentes([]);
+  };
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -40,7 +69,7 @@ function Conferencia() {
 
     const data = {
       mecanico_id: parseInt(selectedMecanico),
-      ferramentas_faltantes: ferramentasFaltantes.map(f => parseInt(f)),
+      ferramentas_presentes: ferramentasPresentes.map(f => parseInt(f)),
     };
 
     api.post('/conferencia', data)
@@ -48,7 +77,7 @@ function Conferencia() {
         alert('Conferência registrada com sucesso!');
         // Limpar seleção
         setSelectedMecanico('');
-        setFerramentasFaltantes([]);
+        setFerramentasPresentes([]);
       })
       .catch(error => {
         console.error('Erro ao registrar a conferência:', error);
@@ -57,7 +86,7 @@ function Conferencia() {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <h1>Conferência de Ferramentas</h1>
       <form onSubmit={handleSubmit}>
         <div>
@@ -69,22 +98,35 @@ function Conferencia() {
             ))}
           </select>
         </div>
+        <h2>Ferramentas Presentes:</h2>
         <div>
-          <h2>Ferramentas Faltantes:</h2>
-          {ferramentas.map(ferramenta => (
-            <div key={ferramenta.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={ferramenta.id}
-                  checked={ferramentasFaltantes.includes(ferramenta.id.toString())}
-                  onChange={handleFerramentaChange}
-                />
-                {ferramenta.nome} ({ferramenta.categoria})
-              </label>
-            </div>
-          ))}
+          <button type="button" onClick={selecionarTodas}>Selecionar Todas</button>
+          <button type="button" onClick={desmarcarTodas}>Desmarcar Todas</button>
         </div>
+        {Object.keys(ferramentasPorCategoria).map(categoria => (
+          <div key={categoria} className={styles.category}>
+            <h3 onClick={() => toggleCategoria(categoria)} style={{ cursor: 'pointer' }}>
+              {categoria} {categoriasVisiveis[categoria] ? '▲' : '▼'}
+            </h3>
+            {categoriasVisiveis[categoria] && (
+              <div>
+                {ferramentasPorCategoria[categoria].map(ferramenta => (
+                  <div key={ferramenta.id} className={styles['tool-item']}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={ferramenta.id}
+                        checked={ferramentasPresentes.includes(ferramenta.id.toString())}
+                        onChange={handleFerramentaChange}
+                      />
+                      {ferramenta.nome}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
         <button type="submit">Enviar Conferência</button>
       </form>
     </div>
