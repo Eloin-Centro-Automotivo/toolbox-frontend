@@ -1,16 +1,14 @@
-// src/App.js
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Conferencia from './Components/Conferencia';
-import Relatorios from './Components/Relatorios';
+import Conference from './Components/Conference';
+import Reports from './Components/Reports';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Conferencia />} />
-        <Route path="/relatorios" element={<Relatorios />} />
+        <Route path="/" element={<Conference />} />
+        <Route path="/reports/daily" element={<Reports />} />
       </Routes>
     </Router>
   );
