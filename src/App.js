@@ -6,6 +6,7 @@ import Conference from './Components/Conference';
 import Reports from './Components/Reports';
 import MechanicList from './Components/MechanicList';
 import ToolList from './Components/ToolList';
+import MissingToolsReport from './Components/MissingToolsReport';
 import './App.css'; // Opcional: criar arquivo de estilos gerais
 
 function App() {
@@ -26,6 +27,9 @@ function App() {
             <li>
               <Link to="/reports/daily">Relatórios</Link>
             </li>
+            <li>
+              <Link to="/reports/missing-tools">Ferramentas Faltantes Únicas</Link>
+            </li>
           </ul>
         </nav>
 
@@ -34,6 +38,7 @@ function App() {
           <Route path="/mechanics" element={<MechanicList />} />
           <Route path="/tools" element={<ToolList />} />
           <Route path="/reports/daily" element={<Reports />} />
+          <Route path="/reports/missing-tools" element={<MissingToolsReport />} />
         </Routes>
       </div>
     </Router>

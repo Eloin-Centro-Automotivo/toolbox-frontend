@@ -1,0 +1,16 @@
+/* src/Components/MissingToolsReport.module.css */
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h1, h2 {
+    text-align: center;
+  }
+  
+  button {
+    margin-left: 10px;
+  }
+  

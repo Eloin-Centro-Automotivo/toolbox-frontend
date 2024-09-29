@@ -24,5 +24,7 @@ export const deleteTool = (id) => api.delete(`/tools/${id}`);
 // Conferência e Relatórios (já existente)
 export const postConference = (data) => api.post('/conference', data);
 export const getDailyReport = (date) => api.get(`/reports/daily?date=${date}`);
+export const getMissingToolsReport = (date) => api.get(`/reports/missing_tools`, { params: { date }, });
+
 
 export default api;
